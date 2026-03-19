@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Smart Farm Security – Local Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #1f2937;
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      text-align: center;
+      min-width: 320px;
+    }
+    h1 { margin-bottom: 1rem; color: #60a5fa; }
+    #status {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Smart Farm Security</h1>
+    <p>Current Detection Status:</p>
+    <div id="status">Loading...</div>
+  </div>
+
+  <script>
+    async function fetchStatus() {
+      try {
+        // add ?t=timestamp to bypass caching
+        const res = await fetch('status.txt?t=' + Date.now());
+        if (!res.ok) {
+          document.getElementById('status').textContent = 'Cannot read status';
+          return;
+        }
+        const text = await res.text();
+        document.getElementById('status').textContent = text || 'No status';
+      } catch (e) {
+        document.getElementById('status').textContent = 'Error fetching status';
+        console.error(e);
+      }
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 2000); // update every 2s
+  </script>
+</body>
+</html>
